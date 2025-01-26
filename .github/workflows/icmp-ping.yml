@@ -1,6 +1,7 @@
 name: ICMP Ping Monitor
 
 on:
+  workflow_dispatch:  # Enables manual trigger
   schedule:
     - cron: "*/1 * * * *"  # Runs every minute
 
