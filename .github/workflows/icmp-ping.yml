@@ -10,21 +10,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check Target Status
-      id: ping
-      run: |
-        target="${{ secrets.MYSTATICIP01 }}"
-        if ping -c 1 $target; then
-          echo "status=up" >> $GITHUB_ENV
-        else
-          echo "status=down" >> $GITHUB_ENV
-          exit 1
-        fi
+      - name: Check Target Status
+        id: ping
+        run: |
+          target="${{ secrets.MYSTATICIP01 }}"
+          if ping -c 1 $target; then
+            echo "status=up" >> $GITHUB_ENV
+          else
+            echo "status=down" >> $GITHUB_ENV
+            exit 1
+          fi
 
       - name: Log Downtime or Uptime
         if: always()
         run: |
-          if [ "${{ steps.ping.outputs.status }}" == "down" ]; then
+          if [ "$status" == "down" ]; then
             echo "$(date): Target is DOWN" >> downtime.log
           else
             echo "$(date): Target is UP" >> uptime.log
