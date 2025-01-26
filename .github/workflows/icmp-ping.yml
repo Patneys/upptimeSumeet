@@ -13,7 +13,7 @@ jobs:
       - name: Check Target Status
         id: ping
         run: |
-          target="${{ secrets.MyStaticIP01 }}"  # Use your GitHub Secret for IP/DDNS
+          target="${{ secrets.MYSTATICIP01 }}"  # Use your GitHub Secret for IP/DDNS
           if ping -c 1 $target; then
             echo "::set-output name=status::up"
           else
