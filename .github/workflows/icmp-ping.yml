@@ -10,16 +10,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check Target Status
-        id: ping
-        run: |
-          target="${{ secrets.MYSTATICIP01 }}"  # Use your GitHub Secret for IP/DDNS
-          if ping -c 1 $target; then
-            echo "::set-output name=status::up"
-          else
-            echo "::set-output name=status::down"
-            exit 1
-          fi
+    - name: Check Target Status
+      id: ping
+      run: |
+        target="${{ secrets.MYSTATICIP01 }}"
+        if ping -c 1 $target; then
+          echo "status=up" >> $GITHUB_ENV
+        else
+          echo "status=down" >> $GITHUB_ENV
+          exit 1
+        fi
 
       - name: Log Downtime or Uptime
         if: always()
