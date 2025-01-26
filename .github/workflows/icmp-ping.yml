@@ -14,13 +14,13 @@ jobs:
         id: check
         run: |
           target="https://google.com"
-          if curl -s --head $target | grep "200 OK"; then
+          if curl -s --head --max-time 10 $target | grep "200 OK"; then
             echo "status=up" >> $GITHUB_ENV
           else
             echo "status=down" >> $GITHUB_ENV
+            echo "Failed to reach $target" >> error.log
             exit 1
           fi
-
 
       - name: Log Downtime or Uptime
         if: always()
@@ -38,3 +38,4 @@ jobs:
           path: |
             downtime.log
             uptime.log
+            error.log
