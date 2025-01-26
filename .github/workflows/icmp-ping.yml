@@ -11,15 +11,16 @@ jobs:
 
     steps:
       - name: Check Target Status
-        id: ping
+        id: check
         run: |
-          target="${{ secrets.MYSTATICIP01 }}"
-          if ping -c 1 $target; then
+          target="https://google.com"
+          if curl -s --head $target | grep "200 OK"; then
             echo "status=up" >> $GITHUB_ENV
           else
             echo "status=down" >> $GITHUB_ENV
             exit 1
           fi
+
 
       - name: Log Downtime or Uptime
         if: always()
