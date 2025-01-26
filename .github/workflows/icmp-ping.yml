@@ -1,0 +1,38 @@
+name: ICMP Ping Monitor
+
+on:
+  schedule:
+    - cron: "*/1 * * * *"  # Runs every minute
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check Target Status
+        id: ping
+        run: |
+          target="${{ secrets.MyStaticIP01 }}"  # Use your GitHub Secret for IP/DDNS
+          if ping -c 1 $target; then
+            echo "::set-output name=status::up"
+          else
+            echo "::set-output name=status::down"
+            exit 1
+          fi
+
+      - name: Log Downtime or Uptime
+        if: always()
+        run: |
+          if [ "${{ steps.ping.outputs.status }}" == "down" ]; then
+            echo "$(date): Target is DOWN" >> downtime.log
+          else
+            echo "$(date): Target is UP" >> uptime.log
+          fi
+
+      - name: Upload Logs
+        uses: actions/upload-artifact@v3
+        with:
+          name: ping-logs
+          path: |
+            downtime.log
+            uptime.log
